@@ -1,3 +1,3 @@
-# Welcome to Chakra UI!
+# Tailwind to ChakraUI converter
 
-This Chakra UI template is set up with TypeScript and Next JS.
+UI tool for converting Tailwind to ChakraUI components.
