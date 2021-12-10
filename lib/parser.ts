@@ -1,4 +1,7 @@
 import parse5 from "parse5";
+import defaultTheme from 'tailwindcss/defaultTheme';
+
+console.log(defaultTheme)
 
 const isAtBreakpoint = (parts: Array<string>) =>
   parts.length && ["sm", "md", "lg", "xl", "2xl"].includes(parts[0]);

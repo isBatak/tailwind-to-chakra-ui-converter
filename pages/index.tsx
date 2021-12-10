@@ -18,9 +18,9 @@ const {
   TabPanels,
   Tab,
   TabPanel,
-  ColorModeProvider,
   Grid,
-  GridItem
+  GridItem,
+  DarkMode,
 } = chakraComponents;
 
 const editorOptions: editor.IStandaloneEditorConstructionOptions = {
@@ -188,13 +188,13 @@ export default function IndexPage() {
           position="relative"
           colStart={{ base: 1, lg: 1, xl: 3 }}
           colSpan="full"
-          colEnd="4"
+          colEnd={4}
           rowStart={{ base: 1, xl: 2 }}
           rowEnd={{ base: 2, xl: 5 }}
           alignSelf="center"
         >
-          <ColorModeProvider options={{ initialColorMode: "dark" }}>
-            <Tabs>
+          <DarkMode>
+            <Tabs color="whiteAlpha.900">
               <WindowShell
                 tabs={
                   <TabList>
@@ -258,7 +258,7 @@ export default function IndexPage() {
                 </TabPanels>
               </WindowShell>
             </Tabs>
-          </ColorModeProvider>
+          </DarkMode>
         </GridItem>
       </Grid>
     </Container>
