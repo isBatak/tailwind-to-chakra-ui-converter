@@ -1,10 +1,7 @@
 import parse5 from "parse5";
 import defaultTheme from 'tailwindcss/defaultTheme';
 
-console.log(defaultTheme)
-
-const isAtBreakpoint = (parts: Array<string>) =>
-  parts.length && ["sm", "md", "lg", "xl", "2xl"].includes(parts[0]);
+const isAtBreakpoint = (parts: Array<string>) => parts.length && Object.keys(defaultTheme.screens).includes(parts[0]);
 
 export const parse = (selector: string): parse5.Attribute => {
   const parts = selector.split(":");

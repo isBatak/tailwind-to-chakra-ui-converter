@@ -7,7 +7,9 @@ import { WindowShell } from "../components/WindowShell";
 import { BsLayoutSplit } from "react-icons/bs";
 import { SiChakraui, SiTailwindcss } from "react-icons/si";
 import JsxParser from "react-jsx-parser";
-import { parse } from "../lib/parser";
+import { parse as tailwindParse } from "../lib/tailwind/parser";
+import { parse as jsxParse } from "../lib/jsx/parser";
+import { convert } from "../lib/babel";
 
 const {
   Box,
@@ -35,7 +37,7 @@ const readOnlyEditor: editor.IStandaloneEditorConstructionOptions = {
 };
 
 const defaultValue = `<figure class="md:flex bg-gray-100 rounded-xl p-8 md:p-0">
-  <img class="w-32 h-32 md:w-48 md:h-auto md:rounded-none rounded-full mx-auto" src="/sarah-dayan.jpg" alt="" width="384" height="512">
+  <img class="w-32 h-32 md:w-48 md:h-auto md:rounded-none rounded-full mx-auto" src="/sarah-dayan.jpg" alt="" width="384" height="512" />
   <div class="pt-6 md:p-8 text-center md:text-left space-y-4">
     <blockquote>
       <p class="text-lg font-semibold">
@@ -66,9 +68,7 @@ const convertTailwindToChakra = (classValue: string) => {
   return selectors.reduce((attributes, selector) => {
     if (selector === "") return attributes;
 
-    const attr = parse(selector);
-
-    console.log(attr);
+    const attr = tailwindParse(selector);
 
     if (attr) attributes.push(attr);
 
@@ -113,13 +113,13 @@ const walker = (nodes: Array<parse5.ChildNode>) => {
   });
 };
 
-const convert = (value: string) => {
-  const node = parse5.parseFragment(value);
+// const convert = (code: string) => {
+//   const node = parse5.parseFragment(code);
 
-  node.childNodes = walker(node.childNodes);
+//   node.childNodes = walker(node.childNodes);
 
-  return parse5.serialize(node);
-};
+//   return parse5.serialize(node);
+// };
 
 export default function IndexPage() {
   const [fragment, setFragment] = useState<string>(() => convert(defaultValue));

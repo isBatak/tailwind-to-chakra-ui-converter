@@ -8,6 +8,10 @@
     "post-update": "yarn upgrade --latest"
   },
   "dependencies": {
+    "@babel/core": "^7.16.5",
+    "@babel/generator": "^7.16.5",
+    "@babel/parser": "^7.16.6",
+    "@babel/standalone": "^7.16.6",
     "@chakra-ui/react": "^1.7.3",
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
@@ -16,6 +20,9 @@
     "@types/node": "14.14.35",
     "@types/parse5": "6.0.2",
     "@types/react": "17.0.3",
+    "acorn": "^8.6.0",
+    "acorn-jsx": "^5.3.2",
+    "babylon": "^6.18.0",
     "change-case": "4.1.2",
     "focus-visible": "^5.2.0",
     "framer-motion": "latest",
@@ -33,5 +40,10 @@
   },
   "license": "MIT",
   "keywords": [],
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "@types/babel__core": "^7.1.17",
+    "@types/babel__parser": "^7.1.1",
+    "@types/babel__standalone": "^7.1.4"
+  }
 }
