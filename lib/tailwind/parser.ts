@@ -1,10 +1,18 @@
-import parse5 from "parse5";
 import defaultTheme from 'tailwindcss/defaultTheme';
+import resolveConfig from "tailwindcss/resolveConfig";
+import { TailwindConfig } from 'tailwindcss/tailwind-config';
 
-const isAtBreakpoint = (parts: Array<string>) => parts.length && Object.keys(defaultTheme.screens).includes(parts[0]);
+const config: TailwindConfig = {
+  theme: defaultTheme,
+  darkMode: "class",
+};
 
-export const parse = (selector: string): parse5.Attribute => {
-  const parts = selector.split(":");
+const { theme, separator } = resolveConfig(config);
+
+const isAtBreakpoint = (parts: Array<string>) => parts.length && Object.keys(theme.screens).includes(parts[0]);
+
+export const parse = (selector: string) => {
+  const parts = selector.split(separator);
 
   if (isAtBreakpoint(parts)) {
     const [mq, value] = parts;

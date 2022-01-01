@@ -4,8 +4,6 @@ import * as parser from "@babel/parser";
 import generate from "@babel/generator";
 import { convertTailwindToChakra, isClassAttribute } from "./utils";
 
-const chakraIdentifiers = ["Box", "Image", "Text"];
-
 function updateContent(babel: typeof Babel) {
   const { types: t, template } = babel;
 
@@ -28,6 +26,8 @@ function updateContent(babel: typeof Babel) {
             nodeName !== "div"
               ? t.jSXAttribute(t.jSXIdentifier("as"), t.stringLiteral(nodeName))
               : null;
+
+          console.log(path.node.attributes)
           const attributes = [asAttribute, ...path.node.attributes].filter(
             Boolean
           );

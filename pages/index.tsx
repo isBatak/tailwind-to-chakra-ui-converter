@@ -1,15 +1,13 @@
 import * as chakraComponents from "@chakra-ui/react";
 import Editor from "@monaco-editor/react";
 import { editor } from "monaco-editor";
-import parse5 from "parse5";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { WindowShell } from "../components/WindowShell";
 import { BsLayoutSplit } from "react-icons/bs";
 import { SiChakraui, SiTailwindcss } from "react-icons/si";
 import JsxParser from "react-jsx-parser";
-import { parse as tailwindParse } from "../lib/tailwind/parser";
-import { parse as jsxParse } from "../lib/jsx/parser";
 import { convert } from "../lib/babel";
+import { runPostcssTest } from "../lib/postcss-test";
 
 const {
   Box,
@@ -36,90 +34,27 @@ const readOnlyEditor: editor.IStandaloneEditorConstructionOptions = {
   readOnly: true
 };
 
-const defaultValue = `<figure class="md:flex bg-gray-100 rounded-xl p-8 md:p-0">
-  <img class="w-32 h-32 md:w-48 md:h-auto md:rounded-none rounded-full mx-auto" src="/sarah-dayan.jpg" alt="" width="384" height="512" />
-  <div class="pt-6 md:p-8 text-center md:text-left space-y-4">
-    <blockquote>
-      <p class="text-lg font-semibold">
-        “Tailwind CSS is the only framework that I've seen scale
-        on large teams. It’s easy to customize, adapts to any design,
-        and the build size is tiny.”
-      </p>
-    </blockquote>
-    <figcaption class="font-medium">
-      <div class="text-cyan-600">
-        Sarah Dayan
-      </div>
-      <div class="text-gray-500">
-        Staff Engineer, Algolia
-      </div>
-    </figcaption>
-  </div>
+const defaultValue = `<figure class="md:flex bg-gray-100 rounded-xl p-8 md:p-0 dark:bg-gray-800">
+<img class="w-24 h-24 md:w-48 md:h-auto md:rounded-none rounded-full mx-auto" src="/sarah-dayan.jpg" alt="" width="384" height="512" />
+<div class="pt-6 md:p-8 text-center md:text-left space-y-4">
+  <blockquote>
+    <p class="text-lg font-medium">
+      “Tailwind CSS is the only framework that I've seen scale
+      on large teams. It’s easy to customize, adapts to any design,
+      and the build size is tiny.”
+    </p>
+  </blockquote>
+  <figcaption class="font-medium">
+    <div class="text-sky-500 dark:text-sky-400">
+      Sarah Dayan
+    </div>
+    <div class="text-gray-700 dark:text-gray-500">
+      Staff Engineer, Algolia
+    </div>
+  </figcaption>
+</div>
 </figure>`;
 
-const isElementNode = (node: parse5.ChildNode): node is parse5.Element =>
-  !node.nodeName.startsWith("#");
-
-const isClassAttr = (attr: parse5.Attribute) => attr.name === "class";
-
-const convertTailwindToChakra = (classValue: string) => {
-  const selectors = classValue.split(" ");
-
-  return selectors.reduce((attributes, selector) => {
-    if (selector === "") return attributes;
-
-    const attr = tailwindParse(selector);
-
-    if (attr) attributes.push(attr);
-
-    return attributes;
-  }, []);
-};
-
-const walker = (nodes: Array<parse5.ChildNode>) => {
-  return nodes.map((node) => {
-    if (isElementNode(node)) {
-      const classAttr = node.attrs.find(isClassAttr);
-      const attrs = node.attrs.reduce<Array<parse5.Attribute>>(
-        (previous, current) => {
-          if (!isClassAttr(current)) {
-            previous.push(current);
-          }
-
-          return previous;
-        },
-        []
-      );
-
-      const chakraProps = convertTailwindToChakra(classAttr?.value || "");
-
-      let asAttr;
-
-      if (node.nodeName !== "div") {
-        const originalNodeName = node.nodeName;
-        asAttr = { name: "as", value: originalNodeName };
-      }
-
-      node.tagName = "Box";
-
-      node.attrs = [...(asAttr ? [asAttr] : []), ...chakraProps, ...attrs];
-
-      if (node.childNodes) {
-        node.childNodes = walker(node.childNodes);
-      }
-    }
-
-    return node;
-  });
-};
-
-// const convert = (code: string) => {
-//   const node = parse5.parseFragment(code);
-
-//   node.childNodes = walker(node.childNodes);
-
-//   return parse5.serialize(node);
-// };
 
 export default function IndexPage() {
   const [fragment, setFragment] = useState<string>(() => convert(defaultValue));
@@ -127,6 +62,10 @@ export default function IndexPage() {
   const changeHandler = (value: string) => {
     setFragment(convert(value));
   };
+
+  // useEffect(() => {
+  //   runPostcssTest();
+  // }, []);
 
   return (
     <Container maxW="container.xl" p="0" mt="8">
@@ -160,7 +99,7 @@ export default function IndexPage() {
               flex: "none",
               ml: "-100%",
               borderRadius: "3xl",
-              bgGradient: "linear(to-br, cyan.400, blue.500)",
+              bgGradient: "linear(to-br, sky.400, blue.500)",
               boxShadow: "lg",
               transform: { base: "rotate(-1deg)", sm: "rotate(-2deg)" }
             }}
